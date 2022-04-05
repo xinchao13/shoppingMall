@@ -17,7 +17,7 @@ import java.util.Properties;
 public class App 
 {
 	@Bean
-        // 标注在方法上
+        // 标注在方法上-ch
     PageHelper pageHelper() {
 		// 分页插件
 		PageHelper pageHelper = new PageHelper();
