@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.mall.themall.dao.GoodsMapper">
+	<resultMap id="BaseResultMap"
+		type="com.shopping.mall.themall.model.Goods">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="addtime" property="addtime"
+			jdbcType="TIMESTAMP" />
+		<result column="deletestatus" property="deletestatus"
+			jdbcType="BIT" />
+		<result column="goodname" property="goodname"
+			jdbcType="VARCHAR" />
+		<result column="oldprice" property="oldprice"
+			jdbcType="DECIMAL" />
+		<result column="newprice" property="newprice"
+			jdbcType="DECIMAL" />
+		<result column="weight" property="weight" jdbcType="REAL" />
+		<result column="volume" property="volume" jdbcType="REAL" />
+		<result column="stock" property="stock" jdbcType="INTEGER" />
+		<result column="sale" property="sale" jdbcType="INTEGER" />
+		<result column="focus" property="focus" jdbcType="INTEGER" />
+		<result column="imgpath" property="imgpath" jdbcType="VARCHAR" />
+		<result column="description" property="description"
+			jdbcType="VARCHAR" />
+		<result column="brandid" property="brandid" jdbcType="INTEGER" />
+		<result column="sortid" property="sortid" jdbcType="INTEGER" />
+		<result column="statu" property="statu" jdbcType="BIT" />
+		<result column="recommend" property="recommend" jdbcType="BIT" />
+		<result column="productid" property="productid"
+			jdbcType="INTEGER" />
+		<result column="orderid" property="orderid" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, addtime, deletestatus, goodname, oldprice, newprice, weight, volume,
+		stock, sale,
+		focus, imgpath, description, brandid, sortid, statu, recommend, productid,
+		orderid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goods
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 查询人气商品 -->
+	<select id="selectByFocus" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goods
+		where deletestatus = 0 order by focus limit 5
+	</select>
+	<!-- 查询推荐商品 -->
+	<select id="selectByRec" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goods
+		where deletestatus = 0 and recommend = 1 order by RAND() limit 5
+	</select>
+	<!-- 查询新商品 -->
+	<select id="selectByNewGoods" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goods
+		where deletestatus = 0 order by addtime desc limit 5
+	</select>
+	<!--显示后台商品列表 -->
+	<resultMap id="BaseResultMap2"
+		type="com.shopping.mall.themall.model.Goods">
+		<id column="aid" property="id" jdbcType="INTEGER" />
+		<result column="goodname" property="goodname"
+			jdbcType="VARCHAR" />
+		<result column="focus" property="focus" jdbcType="INTEGER" />
+		<result column="statu" property="statu" jdbcType="BIT" />
+		<result column="adeletestatus" property="deletestatus"
+			jdbcType="BIT" />
+		<result column="arecommend" property="recommend" jdbcType="BIT" />
+		<association property="brand"
+			javaType="com.shopping.mall.themall.model.Brand">
+			<id column="bid" property="id" />
+			<result column="brandname" property="brandName" />
+
+		</association>
+		<association property="sort"
+			javaType="com.shopping.mall.themall.model.Sort">
+			<id column="cid" property="id" />
+			<result column="sortname" property="sortName" />
+
+		</association>
+	</resultMap>
+	<!--后台查询所有删除状态为0的商品 -->
+	<select id="selectAll" resultMap="BaseResultMap2">
+		select
+		a.id as aid,goodname,a.deletestatus as adeletestatus,
+		b.id as bid,b.brand_name as brandname,
+		c.id as cid,c.sort_name as sortname,
+		statu,a.recommend as arecommend,focus
+		from shopping_goods a LEFT JOIN shopping_brand b
+		on a.brandid = b.id LEFT JOIN shopping_sort c
+		on a.sortid = c.id where a.deletestatus = 0
+		<where>
+			<if test="map.goods_name !=null and map.goods_name != ''">
+				and goodname like '%${map.goods_name}%'
+			</if>
+			<if test="map.goods_brandid !=null and map.goods_brandid != ''">
+				and brandid = #{map.goods_brandid}
+			</if>
+			<if test="map.goods_gcid !=null and map.goods_gcid != ''">
+				and sortid = #{map.goods_gcid}
+			</if>
+			<if
+				test="map.store_recommend !=null and map.store_recommend != ''">
+				and a.recommend = #{map.store_recommend}
+			</if>
+		</where>
+		order by a.addtime desc
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from shopping_goods
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!--添加商品 -->
+	<insert id="insert"
+		parameterType="com.shopping.mall.themall.model.Goods" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into shopping_goods (addtime, deletestatus,
+		goodname, oldprice, newprice,
+		weight, volume, stock, sale,
+		focus, imgpath, description,
+		brandid, sortid, statu,
+		recommend, productid, orderid
+		)
+		values (#{addtime,jdbcType=TIMESTAMP},0,
+		#{goodname,jdbcType=VARCHAR}, #{oldprice,jdbcType=DECIMAL}, #{newprice,jdbcType=DECIMAL},
+		#{weight,jdbcType=REAL}, #{volume,jdbcType=REAL},
+		#{stock,jdbcType=INTEGER}, 0,
+		0, #{imgpath,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+		#{brandid,jdbcType=INTEGER}, #{sortid,jdbcType=INTEGER},
+		#{statu,jdbcType=BIT},
+		#{recommend,jdbcType=BIT}, #{productid,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.shopping.mall.themall.model.Goods">
+		insert into shopping_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="deletestatus != null">
+				deletestatus,
+			</if>
+			<if test="goodname != null">
+				goodname,
+			</if>
+			<if test="oldprice != null">
+				oldprice,
+			</if>
+			<if test="newprice != null">
+				newprice,
+			</if>
+			<if test="weight != null">
+				weight,
+			</if>
+			<if test="volume != null">
+				volume,
+			</if>
+			<if test="stock != null">
+				stock,
+			</if>
+			<if test="sale != null">
+				sale,
+			</if>
+			<if test="focus != null">
+				focus,
+			</if>
+			<if test="imgpath != null">
+				imgpath,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="brandid != null">
+				brandid,
+			</if>
+			<if test="sortid != null">
+				sortid,
+			</if>
+			<if test="statu != null">
+				statu,
+			</if>
+			<if test="recommend != null">
+				recommend,
+			</if>
+			<if test="productid != null">
+				productid,
+			</if>
+			<if test="orderid != null">
+				orderid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deletestatus != null">
+				#{deletestatus,jdbcType=BIT},
+			</if>
+			<if test="goodname != null">
+				#{goodname,jdbcType=VARCHAR},
+			</if>
+			<if test="oldprice != null">
+				#{oldprice,jdbcType=DECIMAL},
+			</if>
+			<if test="newprice != null">
+				#{newprice,jdbcType=DECIMAL},
+			</if>
+			<if test="weight != null">
+				#{weight,jdbcType=REAL},
+			</if>
+			<if test="volume != null">
+				#{volume,jdbcType=REAL},
+			</if>
+			<if test="stock != null">
+				#{stock,jdbcType=INTEGER},
+			</if>
+			<if test="sale != null">
+				#{sale,jdbcType=INTEGER},
+			</if>
+			<if test="focus != null">
+				#{focus,jdbcType=INTEGER},
+			</if>
+			<if test="imgpath != null">
+				#{imgpath,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				#{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="sortid != null">
+				#{sortid,jdbcType=INTEGER},
+			</if>
+			<if test="statu != null">
+				#{statu,jdbcType=BIT},
+			</if>
+			<if test="recommend != null">
+				#{recommend,jdbcType=BIT},
+			</if>
+			<if test="productid != null">
+				#{productid,jdbcType=INTEGER},
+			</if>
+			<if test="orderid != null">
+				#{orderid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.shopping.mall.themall.model.Goods">
+		update shopping_goods
+		<set>
+			<if test="addtime != null">
+				addtime = #{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deletestatus != null">
+				deletestatus = #{deletestatus,jdbcType=BIT},
+			</if>
+			<if test="goodname != null">
+				goodname = #{goodname,jdbcType=VARCHAR},
+			</if>
+			<if test="oldprice != null">
+				oldprice = #{oldprice,jdbcType=DECIMAL},
+			</if>
+			<if test="newprice != null">
+				newprice = #{newprice,jdbcType=DECIMAL},
+			</if>
+			<if test="weight != null">
+				weight = #{weight,jdbcType=REAL},
+			</if>
+			<if test="volume != null">
+				volume = #{volume,jdbcType=REAL},
+			</if>
+			<if test="stock != null">
+				stock = #{stock,jdbcType=INTEGER},
+			</if>
+			<if test="sale != null">
+				sale = #{sale,jdbcType=INTEGER},
+			</if>
+			<if test="focus != null">
+				focus = #{focus,jdbcType=INTEGER},
+			</if>
+			<if test="imgpath != null">
+				imgpath = #{imgpath,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				brandid = #{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="sortid != null">
+				sortid = #{sortid,jdbcType=INTEGER},
+			</if>
+			<if test="statu != null">
+				statu = #{statu,jdbcType=BIT},
+			</if>
+			<if test="recommend != null">
+				recommend = #{recommend,jdbcType=BIT},
+			</if>
+			<if test="productid != null">
+				productid = #{productid,jdbcType=INTEGER},
+			</if>
+			<if test="orderid != null">
+				orderid = #{orderid,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改商品 -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.shopping.mall.themall.model.Goods">
+		update shopping_goods
+		set
+		goodname = #{goodname,jdbcType=VARCHAR},
+		oldprice = #{oldprice,jdbcType=DECIMAL},
+		newprice = #{newprice,jdbcType=DECIMAL},
+		weight = #{weight,jdbcType=REAL},
+		volume = #{volume,jdbcType=REAL},
+		stock = #{stock,jdbcType=INTEGER},
+		imgpath = #{imgpath,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		brandid = #{brandid,jdbcType=INTEGER},
+		sortid = #{sortid,jdbcType=INTEGER},
+		statu = #{statu,jdbcType=BIT},
+		recommend = #{recommend,jdbcType=BIT},
+		productid = #{productid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改商品删除状态 -->
+	<update id="updateStatu"
+		parameterType="com.shopping.mall.themall.model.Goods">
+		update shopping_goods
+		set
+		deletestatus = 1
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改商品库存 -->
+	<update id="updateStock"
+		parameterType="com.shopping.mall.themall.model.Goods">
+		update shopping_goods
+		set
+		stock = #{stock}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

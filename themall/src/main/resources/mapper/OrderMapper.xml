@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.mall.themall.dao.OrderMapper">
+	<resultMap id="BaseResultMap"
+		type="com.shopping.mall.themall.model.Order">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="addtime" property="addtime"
+			jdbcType="TIMESTAMP" />
+		<result column="deletestatus" property="deletestatus"
+			jdbcType="BIT" />
+		<result column="ordernum" property="ordernum"
+			jdbcType="VARCHAR" />
+		<result column="orderstatus" property="orderstatus"
+			jdbcType="INTEGER" />
+		<result column="ordersum" property="ordersum"
+			jdbcType="DECIMAL" />
+		<result column="userid" property="userid" jdbcType="INTEGER" />
+		<result column="detailaddress" property="detailaddress"
+			jdbcType="VARCHAR" />
+		<result column="procityarea" property="procityarea"
+			jdbcType="VARCHAR" />
+		<result column="postcodecode" property="postcodecode"
+			jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="consigneename" property="consigneename"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, addtime, deletestatus, ordernum, orderstatus, ordersum, userid,
+		detailaddress,
+		procityarea, postcodecode, phone, consigneename
+	</sql>
+	<!-- 通过主键查询订单方法 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_order
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 硬删除方法 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.shopping.mall.themall.model.Order">
+		delete from shopping_order
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 添加订单方法 -->
+	<insert id="insert"
+		parameterType="com.shopping.mall.themall.model.Order" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into shopping_order (addtime, deletestatus,
+		ordernum, orderstatus, ordersum,
+		userid, detailaddress, procityarea,
+		postcodecode, phone, consigneename
+		)
+		values (#{addtime,jdbcType=TIMESTAMP},0,
+		#{ordernum,jdbcType=VARCHAR}, #{orderstatus,jdbcType=INTEGER}, #{ordersum,jdbcType=DECIMAL},
+		#{userid,jdbcType=INTEGER}, #{detailaddress,jdbcType=VARCHAR},
+		#{procityarea,jdbcType=VARCHAR},
+		#{postcodecode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{consigneename,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 显示订单列表 -->
+	<resultMap id="BaseResultMap2"
+		type="com.shopping.mall.themall.model.Order">
+		<id column="oid" property="id" jdbcType="INTEGER" />
+		<result column="oaddtime" property="addtime"
+			jdbcType="TIMESTAMP" />
+		<result column="odeletestatus" property="deletestatus"
+			jdbcType="BIT" />
+		<result column="oordernum" property="ordernum"
+			jdbcType="VARCHAR" />
+		<result column="orderstatus" property="orderstatus"
+			jdbcType="INTEGER" />
+		<result column="ordersum" property="ordersum"
+			jdbcType="DECIMAL" />
+		<result column="userid" property="userid" jdbcType="INTEGER" />
+		<result column="detailaddress" property="detailaddress"
+			jdbcType="VARCHAR" />
+		<result column="procityarea" property="procityarea"
+			jdbcType="VARCHAR" />
+		<result column="postcodecode" property="postcodecode"
+			jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="consigneename" property="consigneename"
+			jdbcType="VARCHAR" />
+		<association property="user"
+			javaType="com.shopping.mall.themall.model.User">
+			<id column="userid" property="id" jdbcType="INTEGER" />
+			<result column="username" property="userName"
+				jdbcType="VARCHAR" />
+		</association>
+		<collection property="listDetailOrder"
+			ofType="com.shopping.mall.themall.model.DetailOrder">
+			<id column="odid" property="id" jdbcType="INTEGER" />
+			<result column="deletestatus" property="deletestatus"
+				jdbcType="BIT" />
+			<result column="odordernum" property="ordernum"
+				jdbcType="INTEGER" />
+			<result column="goodsid" property="goodsid" jdbcType="INTEGER" />
+			<result column="count" property="count" jdbcType="INTEGER" />
+			<result column="price" property="price" jdbcType="INTEGER" />
+			<association property="goods"
+				javaType="com.shopping.mall.themall.model.Goods">
+				<id column="gid" property="id" jdbcType="INTEGER" />
+				<result column="goodname" property="goodname"
+					jdbcType="VARCHAR" />
+				<result column="newprice" property="newprice"
+					jdbcType="DECIMAL" />
+				<result column="imgpath" property="imgpath"
+					jdbcType="VARCHAR" />
+				<result column="statu" property="statu" jdbcType="BIT" />
+				<result column="productid" property="productid"
+					jdbcType="INTEGER" />
+			</association>
+		</collection>
+	</resultMap>
+	<!-- 前台显示订单列表 -->
+	<select id="selectOrderList" resultMap="BaseResultMap2">
+		SELECT
+		o.id as oid,
+		o.addtime as oaddtime,
+		o.deletestatus as odeletestatus,
+		o.ordernum as oordernum,
+		o.orderstatus,
+		o.ordersum,
+		o.userid,
+		u.user_name as username,
+		o.detailaddress,
+		o.procityarea,
+		o.postcodecode,
+		o.phone,
+		o.consigneename,
+		od.id as odid,
+		od.deletestatus,
+		od.ordernum as odordernum,
+		od.goodsid,
+		od.count,
+		od.price,
+		g.id as gid,
+		g.goodname,
+		g.newprice,
+		g.imgpath,
+		g.productid,
+		g.statu
+		FROM
+		shopping_order AS o
+		LEFT JOIN shopping_detailorder AS od ON o.id = od.ordernum
+		LEFT JOIN shopping_goods AS g ON g.id = od.goodsid
+		LEFT JOIN shopping_user as u on u.id = o.userid
+		<where>
+			<if test="userid !=null and userid != ''">
+				and userid = #{userid}
+			</if>
+			<if test="map.order_id !=null and map.order_id != ''">
+				and o.ordernum= #{map.order_id}
+			</if>
+			<if test="map.beginTime !=null and map.beginTime != ''">
+				and o.addtime &gt;= #{map.beginTime}
+			</if>
+			<if test="map.endTime !=null and map.endTime != ''">
+				and o.addtime &lt;= '${map.endTime} 23:59:59'
+			</if>
+			<if test="map.order_status !=null and map.order_status != ''">
+				and o.orderstatus = #{map.order_status}
+			</if>
+		</where>
+		order by oaddtime desc
+	</select>
+	<!-- 后台显示订单列表 -->
+	<select id="selectBehindOrderList" resultMap="BaseResultMap2">
+		SELECT
+		o.id as oid,
+		o.addtime as oaddtime,
+		o.deletestatus as odeletestatus,
+		o.ordernum as oordernum,
+		o.orderstatus,
+		o.ordersum,
+		o.userid,
+		u.user_name as username,
+		o.detailaddress,
+		o.procityarea,
+		o.postcodecode,
+		o.phone,
+		o.consigneename,
+		od.id as odid,
+		od.deletestatus,
+		od.ordernum as odordernum,
+		od.goodsid,
+		od.count,
+		od.price,
+		g.id as gid,
+		g.goodname,
+		g.newprice,
+		g.imgpath,
+		g.productid,
+		g.statu
+		FROM
+		shopping_order AS o
+		LEFT JOIN shopping_detailorder AS od ON o.id = od.ordernum
+		LEFT JOIN shopping_goods AS g ON g.id = od.goodsid
+		LEFT JOIN shopping_user as u on u.id = o.userid
+		<where>
+			<if test="map.type == 'buyer'">
+				and u.user_name like '%${map.type_data}%'
+			</if>
+			<if test="map.type == 'order'">
+				and o.ordernum= #{map.type_data}
+			</if>
+			<if test="map.begin_price !=null and map.begin_price != ''">
+				and o.ordersum &gt;= #{map.begin_price}
+			</if>
+			<if test="map.end_price !=null and map.end_price != ''">
+				and o.ordersum &lt;= #{map.end_price}
+			</if>
+			<if test="map.beginTime !=null and map.beginTime != ''">
+				and o.addtime &gt;= #{map.beginTime}
+			</if>
+			<if test="map.endTime !=null and map.endTime != ''">
+				and o.addtime &lt;= '${map.endTime} 23:59:59'
+			</if>
+			<if test="map.order_status !=null and map.order_status != ''">
+				and o.orderstatus = #{map.order_status}
+			</if>
+		</where>
+		order by oaddtime desc
+	</select>
+	<!-- 通过订单编号（主键）查询详单信息 -->
+	<select id="selectDatailbyOrdernum" resultMap="BaseResultMap2">
+		SELECT
+		o.id as oid,
+		o.addtime as oaddtime,
+		o.deletestatus as odeletestatus,
+		o.ordernum as oordernum,
+		o.orderstatus,
+		o.ordersum,
+		o.userid,
+		u.user_name as username,
+		o.detailaddress,
+		o.procityarea,
+		o.postcodecode,
+		o.phone,
+		o.consigneename,
+		od.id as odid,
+		od.deletestatus,
+		od.ordernum as odordernum,
+		od.goodsid,
+		od.count,
+		od.price,
+		g.id as gid,
+		g.goodname,
+		g.newprice,
+		g.imgpath,
+		g.productid,
+		g.statu
+		FROM
+		shopping_order AS o
+		LEFT JOIN shopping_detailorder AS od ON o.id = od.ordernum
+		LEFT JOIN shopping_goods AS g ON g.id = od.goodsid
+		LEFT JOIN shopping_user as u on u.id = o.userid
+		WHERE
+		o.id = #{ordernum}
+	</select>
+	<insert id="insertSelective"
+		parameterType="com.shopping.mall.themall.model.Order">
+		insert into shopping_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="deletestatus != null">
+				deletestatus,
+			</if>
+			<if test="ordernum != null">
+				ordernum,
+			</if>
+			<if test="orderstatus != null">
+				orderstatus,
+			</if>
+			<if test="ordersum != null">
+				ordersum,
+			</if>
+			<if test="userid != null">
+				userid,
+			</if>
+			<if test="detailaddress != null">
+				detailaddress,
+			</if>
+			<if test="procityarea != null">
+				procityarea,
+			</if>
+			<if test="postcodecode != null">
+				postcodecode,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="consigneename != null">
+				consigneename,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deletestatus != null">
+				#{deletestatus,jdbcType=BIT},
+			</if>
+			<if test="ordernum != null">
+				#{ordernum,jdbcType=VARCHAR},
+			</if>
+			<if test="orderstatus != null">
+				#{orderstatus,jdbcType=INTEGER},
+			</if>
+			<if test="ordersum != null">
+				#{ordersum,jdbcType=DECIMAL},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+			<if test="detailaddress != null">
+				#{detailaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="procityarea != null">
+				#{procityarea,jdbcType=VARCHAR},
+			</if>
+			<if test="postcodecode != null">
+				#{postcodecode,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="consigneename != null">
+				#{consigneename,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		<set>
+			<if test="addtime != null">
+				addtime = #{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deletestatus != null">
+				deletestatus = #{deletestatus,jdbcType=BIT},
+			</if>
+			<if test="ordernum != null">
+				ordernum = #{ordernum,jdbcType=VARCHAR},
+			</if>
+			<if test="orderstatus != null">
+				orderstatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+			<if test="ordersum != null">
+				ordersum = #{ordersum,jdbcType=DECIMAL},
+			</if>
+			<if test="userid != null">
+				userid = #{userid,jdbcType=INTEGER},
+			</if>
+			<if test="detailaddress != null">
+				detailaddress = #{detailaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="procityarea != null">
+				procityarea = #{procityarea,jdbcType=VARCHAR},
+			</if>
+			<if test="postcodecode != null">
+				postcodecode = #{postcodecode,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="consigneename != null">
+				consigneename = #{consigneename,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set addtime = #{addtime,jdbcType=TIMESTAMP},
+		deletestatus = #{deletestatus,jdbcType=BIT},
+		ordernum = #{ordernum,jdbcType=VARCHAR},
+		orderstatus = #{orderstatus,jdbcType=INTEGER},
+		ordersum = #{ordersum,jdbcType=DECIMAL},
+		userid = #{userid,jdbcType=INTEGER},
+		detailaddress = #{detailaddress,jdbcType=VARCHAR},
+		procityarea = #{procityarea,jdbcType=VARCHAR},
+		postcodecode = #{postcodecode,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		consigneename = #{consigneename,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 取消订单方法 -->
+	<update id="updateByCancelOrder"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set
+		orderstatus = 6
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 付款订单方法 -->
+	<update id="updateByPayOrder"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set
+		orderstatus = 1
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 提醒卖家发货方法 -->
+	<update id="remind"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set
+		orderstatus = 2
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 确认收货方法 -->
+	<update id="confirmGet"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set
+		orderstatus = 3
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 评价方法 -->
+	<update id="aspire"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set
+		orderstatus = 4
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 软删除方法 -->
+	<update id="ruanDelete"
+		parameterType="com.shopping.mall.themall.model.Order">
+		update shopping_order
+		set
+		orderstatus = 5
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

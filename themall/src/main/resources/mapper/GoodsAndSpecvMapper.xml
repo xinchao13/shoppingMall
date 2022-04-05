@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.mall.themall.dao.GoodsAndSpecvMapper">
+	<resultMap id="BaseResultMap2"
+		type="com.shopping.mall.themall.model.GoodsAndSpecv">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="specvid" property="specvid" jdbcType="INTEGER" />
+		<result column="specid" property="specid" jdbcType="INTEGER" />
+		<collection property="listSpecv"
+			ofType="com.shopping.mall.themall.model.Specv">
+			<result column="svid" property="id" />
+			<result column="specvname" property="specvname" />
+		</collection>
+	</resultMap>
+	<!-- 查询商品的规格，规格值，并有规格相对应的所有规格值集合 -->
+	<select id="select" resultMap="BaseResultMap2"
+		parameterType="java.lang.Integer">
+		select
+		gsv.id,
+		gsv.specid,
+		gsv.specvid,
+		sv.id as svid,
+		sv.specvname
+		from shopping_goodsandspecv gsv
+		inner join shopping_spec s on s.id = gsv.specid
+		inner join shopping_specv sv on sv.specid = s.id
+		where gsv.goodsid = #{id}
+	</select>
+	<resultMap id="BaseResultMap"
+		type="com.shopping.mall.themall.model.GoodsAndSpecv">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="productid" property="productid"
+			jdbcType="INTEGER" />
+		<result column="specvid" property="specvid" jdbcType="INTEGER" />
+		<result column="goodsid" property="goodsid" jdbcType="INTEGER" />
+		<result column="specid" property="specid" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, productid, specvid, goodsid, specid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goodsandspecv
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据商品id查询规格值 -->
+	<select id="selectByGoodsid" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goodsandspecv
+		where goodsid = #{goodsid,jdbcType=INTEGER}
+	</select>
+	<!-- 根据产品号与规格值id查商品id -->
+	<select id="findByProAndSpecv" resultType="java.lang.Integer">
+		SELECT
+		gsv.goodsid
+		FROM
+		shopping_goodsandspecv gsv
+		inner join
+		shopping_goodsandspecv gsv2
+		on gsv.goodsid = gsv2.goodsid
+		<where>
+			<if test="productid !=null and productid != ''">
+				AND gsv.productid = #{productid}
+			</if>
+			<if test="specvid1 !=null and specvid1 != ''">
+				AND gsv.specvid = #{specvid1}
+			</if>
+			<if test="specvid2 !=null and specvid2 != ''">
+				AND gsv2.specvid = #{specvid2}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from shopping_goodsandspecv
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByGoodsId" parameterType="java.lang.Integer">
+		delete from shopping_goodsandspecv
+		where goodsid = #{goodsid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.shopping.mall.themall.model.GoodsAndSpecv">
+		insert into shopping_goodsandspecv (productid, specvid,
+		goodsid, specid)
+		values (#{productid,jdbcType=INTEGER}, #{specvid,jdbcType=INTEGER},
+		#{goodsid,jdbcType=INTEGER}, #{specid,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.shopping.mall.themall.model.GoodsAndSpecv">
+		insert into shopping_goodsandspecv
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="productid != null">
+				productid,
+			</if>
+			<if test="specvid != null">
+				specvid,
+			</if>
+			<if test="goodsid != null">
+				goodsid,
+			</if>
+			<if test="specid != null">
+				specid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="productid != null">
+				#{productid,jdbcType=INTEGER},
+			</if>
+			<if test="specvid != null">
+				#{specvid,jdbcType=INTEGER},
+			</if>
+			<if test="goodsid != null">
+				#{goodsid,jdbcType=INTEGER},
+			</if>
+			<if test="specid != null">
+				#{specid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.shopping.mall.themall.model.GoodsAndSpecv">
+		update shopping_goodsandspecv
+		<set>
+			<if test="productid != null">
+				productid = #{productid,jdbcType=INTEGER},
+			</if>
+			<if test="specvid != null">
+				specvid = #{specvid,jdbcType=INTEGER},
+			</if>
+			<if test="goodsid != null">
+				goodsid = #{goodsid,jdbcType=INTEGER},
+			</if>
+			<if test="specid != null">
+				specid = #{specid,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.shopping.mall.themall.model.GoodsAndSpecv">
+		update shopping_goodsandspecv
+		set productid = #{productid,jdbcType=INTEGER},
+		specvid = #{specvid,jdbcType=INTEGER},
+		goodsid = #{goodsid,jdbcType=INTEGER},
+		specid = #{specid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

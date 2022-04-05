@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.mall.themall.dao.GoodcartMapper">
+	<resultMap id="BaseResultMap"
+		type="com.shopping.mall.themall.model.Goodcart">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="addtime" property="addtime"
+			jdbcType="TIMESTAMP" />
+		<result column="userid" property="userid" jdbcType="INTEGER" />
+		<result column="goodsid" property="goodsid" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<association property="goods"
+			javaType="com.shopping.mall.themall.model.Goods">
+			<id column="gid" property="id" />
+			<result column="goodname" property="goodname" />
+			<result column="imgpath" property="imgpath" />
+			<result column="newprice" property="newprice" />
+			<result column="stock" property="stock" />
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, addtime, userid, goodsid, count
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select g.id as gid,goodname,imgpath,newprice,stock,
+		s.id, s.addtime, userid, goodsid, count
+		from shopping_goodcart as s left join shopping_goods as g
+		on g.id=s.goodsid
+		where s.id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据用户id和商品id查购物车对象 -->
+	<select id="selectByUseridAndGoodsid" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goodcart
+		where userid = #{userid} and goodsid=#{goodsid}
+	</select>
+	<!-- 查询某用户的购物车 -->
+	<select id="selectGoodCart" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_goodcart
+		where userid = #{userid}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from shopping_goodcart
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 添加购物车记录 -->
+	<insert id="insert"
+		parameterType="com.shopping.mall.themall.model.Goodcart">
+		insert into shopping_goodcart (addtime, userid,
+		goodsid, count)
+		values (#{addtime,jdbcType=TIMESTAMP}, #{userid,jdbcType=INTEGER},
+		#{goodsid,jdbcType=INTEGER}, #{count,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.shopping.mall.themall.model.Goodcart">
+		insert into shopping_goodcart
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="userid != null">
+				userid,
+			</if>
+			<if test="goodsid != null">
+				goodsid,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+			<if test="goodsid != null">
+				#{goodsid,jdbcType=INTEGER},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.shopping.mall.themall.model.Goodcart">
+		update shopping_goodcart
+		<set>
+			<if test="addtime != null">
+				addtime = #{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userid != null">
+				userid = #{userid,jdbcType=INTEGER},
+			</if>
+			<if test="goodsid != null">
+				goodsid = #{goodsid,jdbcType=INTEGER},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改购物车对象的count -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.shopping.mall.themall.model.Goodcart">
+		update shopping_goodcart
+		set
+		count = #{count,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<resultMap type="com.shopping.mall.themall.model.Goodcart"
+		id="getInfo">
+		<id column="gcid" property="id" jdbcType="INTEGER" />
+		<result column="userid" property="userid" jdbcType="INTEGER" />
+		<result column="gcgoodsid" property="goodsid"
+			jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<association property="goods"
+			javaType="com.shopping.mall.themall.model.Goods">
+			<id column="gid" property="id" />
+			<result column="goodname" property="goodname" />
+			<result column="imgpath" property="imgpath" />
+			<result column="newprice" property="newprice" />
+			<result column="stock" property="stock" />
+			<collection property="listGoodsAndSpecv"
+				ofType="com.shopping.mall.themall.model.GoodsAndSpecv">
+				<association property="spec"
+					javaType="com.shopping.mall.themall.model.Spec">
+					<result column="svspecid" property="id" />
+					<result column="specname" property="specname" />
+				</association>
+				<association property="specv"
+					javaType="com.shopping.mall.themall.model.Specv">
+					<result column="specvid" property="id" />
+					<result column="specvname" property="specvname" />
+				</association>
+			</collection>
+		</association>
+	</resultMap>
+	<select id="getInfo" resultMap="getInfo"
+		parameterType="java.lang.Integer">
+		SELECT
+		gc.id as gcid,g.id as gid,userid,
+		goodsid as gcgoodsid,goodname,imgpath,count,newprice
+		FROM
+		shopping_goodcart gc
+		LEFT JOIN shopping_goods g ON gc.goodsid = g.id
+		AND userid = #{userid}
+	</select>
+	<select id="goodsCartDetail" resultMap="getInfo"
+		parameterType="java.lang.Integer">
+		SELECT
+		gc.id AS gcid,
+		g.id AS gid,
+		userid,
+		GC.goodsid as gcgoodsid,
+		sv.specid as svspecid,
+		specvid,
+		specname,
+		specvname,
+		goodname,
+		imgpath,
+		stock,
+		count,
+		newprice
+		FROM
+		shopping_goodcart gc
+		LEFT JOIN shopping_goods g ON gc.goodsid = g.id
+		LEFT JOIN shopping_goodsandspecv gsv ON gsv.goodsid = gc.goodsid
+		LEFT JOIN shopping_spec sp ON sp.id = gsv.specid
+		LEFT JOIN shopping_specv sv ON sv.id = gsv.specvid
+		AND userid = #{userid}
+	</select>
+</mapper>

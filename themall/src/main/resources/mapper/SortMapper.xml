@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shopping.mall.themall.dao.SortMapper">
+	<resultMap type="com.shopping.mall.themall.model.Sort"
+		id="getAllSort">
+		<id column="cid" property="id" jdbcType="INTEGER" />
+		<result column="cname" property="sortName" jdbcType="VARCHAR" />
+		<result column="cparentid" property="parentid"
+			jdbcType="INTEGER" />
+		<collection property="listSort2"
+			ofType="com.shopping.mall.themall.model.Sort">
+			<result column="c2id" property="id" />
+			<result column="c2name" property="sortName" />
+			<result column="c2pid" property="parentid" />
+		</collection>
+		<collection property="listSort3"
+			ofType="com.shopping.mall.themall.model.Sort">
+			<result column="c3id" property="id" />
+			<result column="c3name" property="sortName" />
+			<result column="c3pid" property="parentid" />
+		</collection>
+	</resultMap>
+	<!--有排列层级的查询所有分类 -->
+	<select id="getAllSort" resultMap="getAllSort">
+		select
+		c.id as cid,c.sort_name as cname,c.parentid as cparentid,
+		c2.id as c2id,c2.sort_name as c2name,c2.parentid as c2pid,
+		c3.id as c3id,c3.sort_name as c3name,c3.parentid as c3pid
+		from shopping_sort c
+		left join shopping_sort c2 on c2.parentid = c.id
+		left join shopping_sort c3 on c3.parentid = c2.id
+		where c.parentid = 0
+	</select>
+	<resultMap id="BaseResultMap"
+		type="com.shopping.mall.themall.model.Sort">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="addtime" property="addtime"
+			jdbcType="TIMESTAMP" />
+		<result column="deletestatus" property="deletestatus"
+			jdbcType="BIT" />
+		<result column="sort_name" property="sortName"
+			jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="parentid" property="parentid"
+			jdbcType="INTEGER" />
+		<result column="display" property="display" jdbcType="BIT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, addtime, deletestatus, sort_name, sort, parentid, display
+	</sql>
+	<!--通过id查分类对象 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_sort
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!--查询一个分类名称 -->
+	<select id="findByName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_sort where sort_name = #{sortName}
+	</select>
+	<!--查询所有分类名称(可重用) -->
+	<select id="findAllSort" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_sort where parentid = #{parentid}
+		order by sort
+	</select>
+	<!--根据id删除一个三级分类对象 -->
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from shopping_sort
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<!--根据id删除多个三级分类对象 -->
+	<delete id="deletesort3" parameterType="java.lang.Integer">
+		delete from shopping_sort
+		where parentid = #{id,jdbcType=INTEGER}
+	</delete>
+	<!-- 添加分类方法 -->
+	<insert id="insert" parameterType="com.shopping.mall.themall.model.Sort">
+		insert into shopping_sort (addtime, deletestatus,
+		sort_name, sort,parentid,
+		display)
+		values (#{addtime,jdbcType=TIMESTAMP},0,
+		#{sortName,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
+		#{parentid,jdbcType=INTEGER},#{display,jdbcType=BIT})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.shopping.mall.themall.model.Sort">
+		insert into shopping_sort
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="deletestatus != null">
+				deletestatus,
+			</if>
+			<if test="sortName != null">
+				sort_name,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="parentid != null">
+				parentid,
+			</if>
+			<if test="display != null">
+				display,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deletestatus != null">
+				#{deletestatus,jdbcType=BIT},
+			</if>
+			<if test="sortName != null">
+				#{sortName,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+			<if test="parentid != null">
+				#{parentid,jdbcType=INTEGER},
+			</if>
+			<if test="display != null">
+				#{display,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.shopping.mall.themall.model.Sort">
+		update shopping_sort
+		<set>
+			<if test="addtime != null">
+				addtime = #{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deletestatus != null">
+				deletestatus = #{deletestatus,jdbcType=BIT},
+			</if>
+			<if test="sortName != null">
+				sort_name = #{sortName,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="parentid != null">
+				parentid = #{parentid,jdbcType=INTEGER},
+			</if>
+			<if test="display != null">
+				display = #{display,jdbcType=BIT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- 修改分类方法 -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.shopping.mall.themall.model.Sort">
+		update shopping_sort
+		set
+		sort_name = #{sortName,jdbcType=VARCHAR},
+		sort = #{sort,jdbcType=INTEGER},
+		parentid = #{parentid,jdbcType=INTEGER},
+		display = #{display,jdbcType=BIT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
