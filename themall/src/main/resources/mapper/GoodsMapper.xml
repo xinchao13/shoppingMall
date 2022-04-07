@@ -97,8 +97,9 @@
 		statu,a.recommend as arecommend,focus
 		from shopping_goods a LEFT JOIN shopping_brand b
 		on a.brandid = b.id LEFT JOIN shopping_sort c
-		on a.sortid = c.id where a.deletestatus = 0
+		on a.sortid = c.id
 		<where>
+			a.deletestatus = 0
 			<if test="map.goods_name !=null and map.goods_name != ''">
 				and goodname like '%${map.goods_name}%'
 			</if>

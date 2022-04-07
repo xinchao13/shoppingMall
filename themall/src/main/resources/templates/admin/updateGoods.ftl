@@ -272,7 +272,7 @@ $(function(){
 					<li><span class="webnamesec sizese"> <select
 							name="spec" id="spec1">
 								<option value="">所有规格</option>
-								<#iflistSpec??>
+								<#if listSpec??>
           <#list listSpec as spec>
                 <option value="${spec.id}" ${(specid1?? && spec.id == specid1)?string('selected="select"','')}>${spec.specname}</option>
           </#list>
@@ -282,7 +282,7 @@ $(function(){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <select
 							name="specv" id="specv1">
 								<option>--请选择规格相对应的规格值--</option>
-								<#iflistSpecv1??>
+								<#if listSpecv1??>
           	<#list listSpecv1 as specv>
                 <option value="${specv.id}" ${(specid1?? && specv.id == specvid1)?string('selected="select"','')}>${specv.specvname}</option>
           	</#list>
@@ -300,7 +300,7 @@ $(function(){
 					<li><span class="webnamesec sizese"> <select
 							name="spec" id="spec2">
 								<option value="">所有规格</option>
-								<#iflistSpec??>
+								<#if listSpec??>
           <#list listSpec as spec>
                 <option value="${spec.id}" ${(specid2?? && spec.id == specid2)?string('selected="select"','')}>${spec.specname}</option>
           </#list>
@@ -310,7 +310,7 @@ $(function(){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <select
 							name="specv" id="specv2">
 								<option>--请选择规格相对应的规格值--</option>
-								<#iflistSpecv2??>
+								<#if listSpecv2??>
           	<#list listSpecv2 as specv>
                 <option value="${specv.id}" ${(specid2?? && specv.id == specvid2)?string('selected="select"','')}>${specv.specvname}</option>
           	</#list>
@@ -378,7 +378,7 @@ $(function(){
 										href="javascript:void(0);" onclick="addImg();">添加更多图片</a></span></td>
 								<td>&nbsp;</td>
 							</tr>
-							<#iflistImg??>
+							<#if listImg??>
       <#list listImg as img>
       <tr id="goods_spec_">
       	<td width="782">
