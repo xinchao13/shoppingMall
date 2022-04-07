@@ -159,7 +159,7 @@
 		goodsid as gcgoodsid,goodname,imgpath,count,newprice
 		FROM
 		shopping_goodcart gc
-		LEFT JOIN shopping_goods g ON gc.goodsid = g.id
+		INNER JOIN shopping_goods g ON gc.goodsid = g.id
 		AND userid = #{userid}
 	</select>
 	<select id="goodsCartDetail" resultMap="getInfo"
@@ -168,7 +168,7 @@
 		gc.id AS gcid,
 		g.id AS gid,
 		userid,
-		GC.goodsid as gcgoodsid,
+		gc.goodsid as gcgoodsid,
 		sv.specid as svspecid,
 		specvid,
 		specname,
