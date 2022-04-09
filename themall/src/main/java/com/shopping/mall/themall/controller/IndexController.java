@@ -69,24 +69,6 @@ public class IndexController {
 	}
 
 	/**
-	 * 显示验证码
-	 * @param request
-	 * @param response
-	 */
-	@RequestMapping("/imgcode")
-	public void toregister(HttpServletRequest request, HttpServletResponse response) {
-		//显示出二维码
-		//设置响应类型，图片格式
-		response.setContentType("image/jpeg");
-		//设置响应头，阻止浏览器缓存此响应的内容(节约内存)
-		response.setHeader("Pragma", "No-cache");
-				
-		//引用工具类中的方法，绘制验证码图片
-		ValidateCode code = new ValidateCode();
-		code.getValidateCode(request, response);//调用绘制验证码的方法，绘制图片
-		//跳转到注册页面
-	}
-	/**
 	 * 提交登录表单方法
 	 * @param user
 	 * @param username

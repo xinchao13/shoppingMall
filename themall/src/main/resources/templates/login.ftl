@@ -67,7 +67,7 @@ jQuery(document).ready(function(){
 											name="verify_code" type="hidden" id="verify_code"
 											value="02e656adee09f8394b402d9958389b7d"> <span
 												class="login_codeimg"> <img style="cursor: pointer;"
-													src="/index/imgcode" id="imgcode" onclick="refresh(this)"
+													src="/user/imgcode" id="imgcode" onclick="refresh(this)"
 													width="59" height="27" />
 											</span> <a href="javascript:void(0);" onclick="refreshtext()"
 												class="usenosee">看不清换一张</a> <span class="login_error_sp"
