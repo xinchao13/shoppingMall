@@ -6,6 +6,16 @@ public class Goodcart {
 
     private Integer id;
     private Goods goods;
+    private Integer usergooodscount;
+
+
+    public Integer getUsergooodscount() {
+        return usergooodscount;
+    }
+
+    public void setUsergooodscount(Integer usergooodscount) {
+        this.usergooodscount = usergooodscount;
+    }
     
     public Goods getGoods() {
 		return goods;

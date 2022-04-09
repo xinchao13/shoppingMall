@@ -9,6 +9,7 @@
 		<result column="userid" property="userid" jdbcType="INTEGER" />
 		<result column="goodsid" property="goodsid" jdbcType="INTEGER" />
 		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="usergooodscount" property="usergooodscount" jdbcType="INTEGER" />
 		<association property="goods"
 			javaType="com.shopping.mall.themall.model.Goods">
 			<id column="gid" property="id" />
@@ -45,6 +46,14 @@
 		from shopping_goodcart
 		where userid = #{userid}
 	</select>
+    <!--查询用户有几种商品-->
+    <select id="selectGoodCount" resultMap="BaseResultMap"
+            parameterType="java.lang.Integer">
+        select
+          COUNT(*) AS usergooodscount
+        from shopping_goodcart
+        where userid = #{userid}
+    </select>
 	<delete id="deleteByPrimaryKey"
 		parameterType="java.lang.Integer">
 		delete from shopping_goodcart

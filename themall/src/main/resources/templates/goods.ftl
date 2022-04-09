@@ -476,14 +476,24 @@ function ajaxPage(url,currentPage,obj){
 		   });
 		});
 	   </script>
-					<li class="search menu-item menupx">
-						<div class="menu" id="cart_menu">
+					<#if user??>
+                    <li class="search menu-item menupx">
+                        <div class="menu" id="cart_menu">
 							<span class="menu-hd" id="cart_goods_top_menu"><s></s>购物车<span
-								id="cart_goods_count_top" class="top_car">0</span>种商品<b></b></span>
-							<div class="menu-bd" id="cart_goods_top_info"
-								style="display: none;"></div>
-						</div>
-					</li>
+                                    id="cart_goods_count_top" class="top_car">${count}</span>种商品<b></b></span>
+                            <div class="menu-bd" id="cart_goods_top_info">
+                                <div class="menu-bd-panel">
+                                    <div style="text-align: center;">
+                                        <img src="/images/loader.gif">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+					<#else>
+					<#--若没用户登录就直接不显示购物车-->
+					</#if>
 
 					</li>
 					<li class="menupx"><a

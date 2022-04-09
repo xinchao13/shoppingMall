@@ -40,7 +40,7 @@ public class GoodController {
 	 * @return
 	 */
 	@RequestMapping("/toshowgoods")
-	public String tohome(String goodsid, String productid, Model model) {
+	public String tohome(String goodsid, String productid, HttpSession session, Model model) {
 		//得到商品对象
 		Goods goods = goodsService.selectByPrimaryKey(Integer.parseInt(goodsid));
 		model.addAttribute("goods", goods);
@@ -53,6 +53,11 @@ public class GoodController {
 		//得到这个商品的具体规格值
 		List<GoodsAndSpecv> listGoodsSpecv = goodsAndSpecvService.selectByGoodsid(Integer.parseInt(goodsid));
 		model.addAttribute("listGoodsSpecv", listGoodsSpecv);
+		User a = (User)session.getAttribute("user");
+		if(a != null){
+			Goodcart goodcart = goodCartService.selectGoodCount(a.getId());
+			model.addAttribute("count", goodcart.getUsergooodscount());
+		}
 //		//得到用户的购物车中商品信息
 //		if(session.getAttribute("user") != null) {
 //			User user = (User)session.getAttribute("user");

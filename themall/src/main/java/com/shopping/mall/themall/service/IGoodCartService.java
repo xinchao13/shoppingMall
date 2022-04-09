@@ -49,4 +49,8 @@ public interface IGoodCartService {
      * @return
      */
     Goodcart selectByPrimaryKey(Integer id);
+    /**
+     * 查用户购物车里有几种商品
+     */
+    Goodcart selectGoodCount(@Param("userid") Integer userid);
 }

@@ -59,5 +59,9 @@ public interface GoodcartMapper {
      * @return
      */
     List<Goodcart> goodsCartDetail(@Param("userid") Integer userid);
+    /**
+     * 查用户购物车里有几种商品
+     */
+    Goodcart selectGoodCount(@Param("userid") Integer userid);
     
 }

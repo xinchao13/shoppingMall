@@ -290,7 +290,7 @@ function switch_recommend_goods(){
                     <li class="search menu-item menupx">
                         <div class="menu" id="cart_menu">
 							<span class="menu-hd" id="cart_goods_top_menu"><s></s>购物车<span
-                                    id="cart_goods_count_top" class="top_car">0</span>种商品<b></b></span>
+                                    id="cart_goods_count_top" class="top_car">${count}</span>种商品<b></b></span>
                         <div class="menu-bd" id="cart_goods_top_info">
                         <div class="menu-bd-panel">
                         <div style="text-align: center;">
@@ -334,7 +334,7 @@ function switch_recommend_goods(){
 				</ul>
 			</div>
 			<#if user??>
-    <div class="pageleft"><span>${user.userName}您好,欢迎来到童臻时代！</span><a href="/user/logout" class="lightblue" onclick="logout()">[退出]</a>  </div>
+    <div class="pageleft"><span>${user.userName}您好,欢迎来到童臻时代！</span><a href="javascript:void(0);" class="lightblue" onclick="logout()">[退出]</a>  </div>
     <#else>
     <div class="pageleft"><span>亲，欢迎来到童臻时代！</span><span class="pxlr"><a href="/user/login"  class="lightblue">登录</a></span><span class="pxlr">或</span><span class="pxlr"><a href="/index/toregister" class="lightblue">注册</a></span> </div>
   	</#if>
@@ -347,7 +347,6 @@ function switch_recommend_goods(){
 			if(confirm("是否确认登出？")){
 				location.href = "/user/logout";
 			}
-			location.href = "#";
 		}
 
 jQuery(document).ready(function(){

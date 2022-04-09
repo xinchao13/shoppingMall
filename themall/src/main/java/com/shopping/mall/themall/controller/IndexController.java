@@ -1,9 +1,11 @@
 package com.shopping.mall.themall.controller;
 
 import com.shopping.mall.themall.model.Brand;
+import com.shopping.mall.themall.model.Goodcart;
 import com.shopping.mall.themall.model.Goods;
 import com.shopping.mall.themall.model.User;
 import com.shopping.mall.themall.service.IBrandService;
+import com.shopping.mall.themall.service.IGoodCartService;
 import com.shopping.mall.themall.service.IGoodsService;
 import com.shopping.mall.themall.service.IUserService;
 import com.shopping.mall.themall.util.ValidateCode;
@@ -29,12 +31,14 @@ public class IndexController {
 	IGoodsService goodsService;
 	@Resource
 	IBrandService brandService;
+	@Resource
+	IGoodCartService goodCartService;
 	/**
 	 * 去首页
 	 * @return
 	 */
 	@RequestMapping("/home")
-	public String tohome(Model model) {
+	public String tohome(Model model,HttpSession session) {
 		//得到人气商品集合
 		List<Goods> listGoods1 = goodsService.selectByFocus();
 		model.addAttribute("listGoods1", listGoods1);
@@ -47,6 +51,12 @@ public class IndexController {
 		//得到推荐品牌集合
 		List<Brand> listBrand = brandService.selectByRec();
 		model.addAttribute("listBrand", listBrand);
+		User a = (User)session.getAttribute("user");
+		if(a != null){
+			Goodcart goodcart = goodCartService.selectGoodCount(a.getId());
+			model.addAttribute("count", goodcart.getUsergooodscount());
+		}
+
 	    return "home";
 	}
 	/**

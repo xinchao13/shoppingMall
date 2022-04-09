@@ -4,6 +4,7 @@ package com.shopping.mall.themall.service.impl;
 import com.shopping.mall.themall.dao.GoodcartMapper;
 import com.shopping.mall.themall.model.Goodcart;
 import com.shopping.mall.themall.service.IGoodCartService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -60,5 +61,12 @@ public class GoodCartServiceImpl implements IGoodCartService {
 		Goodcart goodcart = goodcartMapper.selectByPrimaryKey(id);
 		return goodcart;
 	}
-
+	/**
+	 * 查用户购物车里有几种商品
+	 */
+	@Override
+	public Goodcart selectGoodCount(Integer id) {
+		Goodcart goodcart = goodcartMapper.selectGoodCount(id);
+		return goodcart;
+	}
 }
