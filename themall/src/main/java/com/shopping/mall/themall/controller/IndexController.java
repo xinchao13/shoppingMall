@@ -31,7 +31,7 @@ public class IndexController {
     IBrandService brandService;
 
     /**
-     * 去首页11
+     * 去首页
      *
      * @return
      */
