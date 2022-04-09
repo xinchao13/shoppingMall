@@ -57,14 +57,7 @@ public class IndexController {
 	public String toregister() {
 	    return "register";
 	}
-	/**
-	 * 去登录页
-	 * @return
-	 */
-	@RequestMapping("/login")
-	public String tologin() {
-	    return "login";
-	}
+
 	/**
 	 * 显示验证码
 	 * @param request

@@ -326,14 +326,22 @@ function switch_recommend_goods(){
 				</ul>
 			</div>
 			<#if user??>
-    <div class="pageleft"><span>${user.userName}您好,欢迎来到童臻时代！</span><a href="http://192.168.1.233:11585/shopping/shopping_logout.htm" class="lightblue">[退出]</a>  </div>
+    <div class="pageleft"><span>${user.userName}您好,欢迎来到童臻时代！</span><a href="/user/logout" class="lightblue" onclick="logout()">[退出]</a>  </div>
     <#else>
-    <div class="pageleft"><span>亲，欢迎来到童臻时代！</span><span class="pxlr"><a href="/index/login" class="lightblue">登录</a></span><span class="pxlr">或</span><span class="pxlr"><a href="/index/toregister" class="lightblue">注册</a></span> </div>
+    <div class="pageleft"><span>亲，欢迎来到童臻时代！</span><span class="pxlr"><a href="/user/login"  class="lightblue">登录</a></span><span class="pxlr">或</span><span class="pxlr"><a href="/index/toregister" class="lightblue">注册</a></span> </div>
   	</#if>
   </div>
 	</div>
 
 	<script>
+
+		function logout(){
+			if(confirm("是否确认登出？")){
+				location.href = "/user/logout";
+			}
+			location.href = "#";
+		}
+
 jQuery(document).ready(function(){
   jQuery(".toph_bgsear li").mouseover(function(){
 	  

@@ -294,7 +294,7 @@ jQuery(document).ready(function(){
 			</div>
 			<div class="pageleft">
 				<span>亲，欢迎来到臻时代！</span><span class="pxlr"><a
-					href="/index/login" class="lightblue">登录</a></span><span class="pxlr">或</span><span
+					href="/user/login" class="lightblue">登录</a></span><span class="pxlr">或</span><span
 					class="pxlr"><a href="javascript:void(0)" class="lightblue">注册</a></span>
 			</div>
 		</div>
