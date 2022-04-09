@@ -168,7 +168,7 @@ div.tip-skyblue div.tip-arrow {
 							title="特别推荐后在首页显示"></td>
 						<td align="center"></td>
 						<td align="center">${goods.focus}</td>
-						<td class="ac8" align="center"><a href="查看?id=98805"
+						<td class="ac8" align="center"><a href="查看?id=${goods.id}"
 							target="_blank">查看</a> <a
 							href="/admin/goods/toupdategoods?id=${goods.id}">编辑</a> <a
 							href="javascript:void(0);"

@@ -264,38 +264,46 @@ function switch_recommend_goods(){
            }
          },"json");
        }
-	    jQuery(document).ready(function(){
-		   jQuery("#cart_goods_top_menu").mouseover(function(){
-			  jQuery.ajax({type:'POST',url:'http://192.168.1.233:11585/shopping/cart_menu_detail.htm',data:'',
-						   beforeSend:function(){
-							     jQuery("#cart_goods_top_info").empty().html('<div class="menu-bd-panel"><div style="text-align:center;"><img src="http://192.168.1.233:11585/shopping/resources/style/common/images/loader.gif" /></div></div>');
-							     jQuery("#cart_goods_top_info").show();
-							   },
-						  success:function(data){
-							     jQuery("#cart_goods_top_info").empty();
-								 jQuery("#cart_goods_top_info").html(data);
-							   }
-						});
-		   });
-		   jQuery("#cart_menu").mouseleave(function(){
-			  jQuery("#cart_goods_top_info").hide();
-		   });
-		});
-	   </script>
-					<li class="search menu-item menupx">
-						<div class="menu" id="cart_menu">
-							<span class="menu-hd" id="cart_goods_top_menu"><s></s>购物车<span
-								id="cart_goods_count_top" class="top_car">0</span>种商品<b></b></span>
-							<div class="menu-bd" id="cart_goods_top_info">
-								<div class="menu-bd-panel">
-									<div style="text-align: center;">
-										<img src="/images/loader.gif">
-									</div>
-								</div>
+         jQuery(document).ready(function(){
+             jQuery("#cart_goods_top_menu").mouseover(function(){
+                 jQuery.ajax({type:'POST',
+                     url:'/goods/showgoodcart',
+                     data:'',
+                     beforeSend:function(){
+                         jQuery("#cart_goods_top_info").empty().html('<div class="menu-bd-panel"><div style="text-align:center;"><img src="http://192.168.1.233:11585/shopping/resources/style/common/images/loader.gif" /></div></div>');
+                         jQuery("#cart_goods_top_info").show();
+                     },
+                     success:function(data){
+                         jQuery("#cart_goods_top_info").empty();
+                         jQuery("#cart_goods_top_info").html(data);
 
-							</div>
-						</div>
-					</li>
+
+                     }
+                 });
+             });
+             jQuery("#cart_menu").mouseleave(function(){
+                 jQuery("#cart_goods_top_info").hide();
+             });
+         });
+	   </script>
+                <#if user??>
+                    <li class="search menu-item menupx">
+                        <div class="menu" id="cart_menu">
+							<span class="menu-hd" id="cart_goods_top_menu"><s></s>购物车<span
+                                    id="cart_goods_count_top" class="top_car">0</span>种商品<b></b></span>
+                        <div class="menu-bd" id="cart_goods_top_info">
+                        <div class="menu-bd-panel">
+                        <div style="text-align: center;">
+                        <img src="/images/loader.gif">
+                        </div>
+                        </div>
+
+                        </div>
+                        </div>
+                    </li>
+                <#else>
+                    <#--若没用户登录就直接不显示购物车-->
+                </#if>
 					<li class="menupx"><a
 						href="http://192.168.1.233:11585/shopping/buyer/message.htm">站内短信</a></li>
 					<#if user?? && user.power>
