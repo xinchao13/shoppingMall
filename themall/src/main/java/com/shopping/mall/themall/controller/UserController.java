@@ -19,7 +19,7 @@ public class UserController {
 	 */
 	@RequestMapping("/login")
 	public String tologin() {
-		return "login";
+	    return "login";
 	}
 	//注销用户
 	@RequestMapping("/logout")
