@@ -333,10 +333,17 @@ function switch_recommend_goods(){
 						href="http://192.168.1.233:11585/shopping/articlelist_help.htm">帮助中心</a></li>
 				</ul>
 			</div>
-			<#if user??>
-    <div class="pageleft"><span>${user.userName}您好,欢迎来到童臻时代！</span><a href="javascript:void(0);" class="lightblue" onclick="logout()">[退出]</a>  </div>
+	<#if user??>
+    	<div class="pageleft"><span>${user.userName}您好,欢迎来到童臻时代！</span>
+			<a href="javascript:void(0);" class="lightblue" onclick="logout()">[退出]</a>
+		</div>
     <#else>
-    <div class="pageleft"><span>亲，欢迎来到童臻时代！</span><span class="pxlr"><a href="/user/login"  class="lightblue">登录</a></span><span class="pxlr">或</span><span class="pxlr"><a href="/index/toregister" class="lightblue">注册</a></span> </div>
+    	<div class="pageleft"><span>亲，欢迎来到童臻时代！</span>
+			<span class="pxlr"><a href="/user/login"  class="lightblue">登录</a></span>
+			<span class="pxlr">或</span>
+			<span class="pxlr"><a href="/index/toregister" class="lightblue">注册</a>
+			</span>
+		</div>
   	</#if>
   </div>
 	</div>

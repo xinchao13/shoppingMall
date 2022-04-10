@@ -193,6 +193,6 @@
 		LEFT JOIN shopping_goodsandspecv gsv ON gsv.goodsid = gc.goodsid
 		LEFT JOIN shopping_spec sp ON sp.id = gsv.specid
 		LEFT JOIN shopping_specv sv ON sv.id = gsv.specvid
-		AND userid = #{userid}
+		WHERE userid = #{userid}
 	</select>
 </mapper>

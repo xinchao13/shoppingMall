@@ -41,23 +41,27 @@ public class GoodController {
 	 */
 	@RequestMapping("/toshowgoods")
 	public String tohome(String goodsid, String productid, HttpSession session, Model model) {
-		//得到商品对象
-		Goods goods = goodsService.selectByPrimaryKey(Integer.parseInt(goodsid));
-		model.addAttribute("goods", goods);
-		//得到商品附图
-		List<Img> listImg = imgService.selectByGoodsId(Integer.parseInt(goodsid));
-		model.addAttribute("listImg", listImg);
-		//得到商品的规格信息
-		List<Spec> listSpec = specService.selectSpec(Integer.parseInt(productid));
-		model.addAttribute("listSpec", listSpec);
-		//得到这个商品的具体规格值
-		List<GoodsAndSpecv> listGoodsSpecv = goodsAndSpecvService.selectByGoodsid(Integer.parseInt(goodsid));
-		model.addAttribute("listGoodsSpecv", listGoodsSpecv);
+		//参照淘宝，判断session是否有用户，无用户直接跳转登录页，有用户进入商品展示页
 		User a = (User)session.getAttribute("user");
-		if(a != null){
-			Goodcart goodcart = goodCartService.selectGoodCount(a.getId());
-			model.addAttribute("count", goodcart.getUsergooodscount());
-		}
+		if(a == null){
+			return "redirect:/user/login";
+		}else {
+			//得到商品对象
+			Goods goods = goodsService.selectByPrimaryKey(Integer.parseInt(goodsid));
+			model.addAttribute("goods", goods);
+			//得到商品附图
+			List<Img> listImg = imgService.selectByGoodsId(Integer.parseInt(goodsid));
+			model.addAttribute("listImg", listImg);
+			//得到商品的规格信息
+			List<Spec> listSpec = specService.selectSpec(Integer.parseInt(productid));
+			model.addAttribute("listSpec", listSpec);
+			//得到这个商品的具体规格值
+			List<GoodsAndSpecv> listGoodsSpecv = goodsAndSpecvService.selectByGoodsid(Integer.parseInt(goodsid));
+			model.addAttribute("listGoodsSpecv", listGoodsSpecv);
+			if(a != null){
+				Goodcart goodcart = goodCartService.selectGoodCount(a.getId());
+				model.addAttribute("count", goodcart.getUsergooodscount());
+			}
 //		//得到用户的购物车中商品信息
 //		if(session.getAttribute("user") != null) {
 //			User user = (User)session.getAttribute("user");
@@ -65,13 +69,13 @@ public class GoodController {
 //			List<Goodcart> listGoodCart = goodCartService.getInfo(user.getId());
 //			model.addAttribute("listGoodCart", listGoodCart);
 //		}
-	    return "goods";
+			return "goods";
+		}
+
+
 	}
 	/**
 	 * ajax动态改变商品信息
-	 * @param id
-	 * @param fieldName
-	 * @param value
 	 * @return
 	 */
 	@RequestMapping("/changegoods")
@@ -181,9 +185,6 @@ public class GoodController {
 	}
 	/**
 	 * ajax动态改变顶部商品信息
-	 * @param id
-	 * @param fieldName
-	 * @param value
 	 * @return
 	 */
 	@RequestMapping("/showgoodcart")
@@ -228,8 +229,6 @@ public class GoodController {
 	}
 	/**
 	 * ajax动态修改商品数量
-	 * @param productid
-	 * @param specvIds
 	 * @return
 	 */
 	@RequestMapping("/ajaxUpdateCount")
@@ -330,8 +329,6 @@ public class GoodController {
 	}
 	/**
 	 * 前台取消订单方法
-	 * @param session
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/cancelorder")
@@ -345,7 +342,6 @@ public class GoodController {
 	}
 	/**
 	 * 前台付款订单方法，跳转付款页面
-	 * @param session
 	 * @param model
 	 * @return
 	 */
@@ -361,7 +357,6 @@ public class GoodController {
 	}
 	/**
 	 * 付款成功后执行方法
-	 * @param session
 	 * @param model
 	 * @return
 	 */
@@ -376,7 +371,6 @@ public class GoodController {
 	}
 	/**
 	 * 提醒卖家发货方法
-	 * @param session
 	 * @param model
 	 * @return
 	 */
@@ -391,7 +385,6 @@ public class GoodController {
 	}
 	/**
 	 * 确认收货方法
-	 * @param session
 	 * @param model
 	 * @return
 	 */
@@ -406,7 +399,6 @@ public class GoodController {
 	}
 	/**
 	 * 评价方法
-	 * @param session
 	 * @param model
 	 * @return
 	 */
@@ -421,7 +413,6 @@ public class GoodController {
 	}
 	/**
 	 * 软删方法
-	 * @param session
 	 * @param model
 	 * @return
 	 */
@@ -436,7 +427,6 @@ public class GoodController {
 	}
 	/**
 	 * 硬删方法
-	 * @param session
 	 * @param model
 	 * @return
 	 */

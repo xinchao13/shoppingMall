@@ -48,6 +48,5 @@ public class UserController {
 		//引用工具类中的方法，绘制验证码图片
 		ValidateCode code = new ValidateCode();
 		code.getValidateCode(request, response);//调用绘制验证码的方法，绘制图片
-		//跳转到注册页面
 	}
 }

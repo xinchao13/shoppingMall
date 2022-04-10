@@ -915,7 +915,7 @@ jQuery(document).ready(function(){
 															name="verify_code" type="hidden" id="verify_code"
 															value="3a01fc0853ebeba94fde4d1cc6fb842a">
 												</span><span class="yzm"> <img style="cursor: pointer;"
-														src="/index/imgcode" id="code_img" onclick="refresh(this)"
+														src="/user/imgcode" id="code_img" onclick="refresh(this)"
 														width="59" height="27"></span></td>
 												<td class="login_nameu2">点击图片更新验证码</td>
 											</tr>
@@ -975,7 +975,7 @@ jQuery(document).ready(function(){
 		<script>
 function refresh(element) {
 	//加入随机数的目的为了避免因为缓存机制的原因，导致请求路径相同而页面不刷新的问题
-	element.src = "imgcode?r=" + Math.random();
+	element.src = "/user/imgcode?r=" + Math.random();
 }
 jQuery(document).ready(function(){
 			//滚动条滚动事件

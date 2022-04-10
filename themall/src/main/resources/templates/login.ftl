@@ -97,10 +97,10 @@ jQuery(document).ready(function(){
 		<script>
 function refresh(element) {
 	//加入随机数的目的为了避免因为缓存机制的原因，导致请求路径相同而页面不刷新的问题
-	element.src = "imgcode?r=" + Math.random();
+	element.src = "/user/imgcode?r=" + Math.random();
 }
 function refreshtext() {
-	var src= "imgcode?r=" + Math.random();
+	var src= "/user/imgcode?r=" + Math.random();
 	$("#imgcode").attr("src",src);
 }
 jQuery(document).ready(function(){

@@ -92,7 +92,7 @@ public class IndexController {
 			System.out.println("验证码正确！");
 		}else{
 			model.addAttribute("message", "验证码不正确");
-			return "login";
+			return "/user/login";
 		}
 		try {
 			user.setUserName(username);
