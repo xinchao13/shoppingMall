@@ -91,7 +91,8 @@ div.tip-skyblue div.tip-arrow {
 			<span class="tab-one"></span> <span class="tabs"> <a
 				href="/admin/goods/toshowgoodslist" class="this">所有商品</a> | <a
 				href="/admin/goods/toinsertgoods">新增商品</a> | <a
-				href="javascript:void(0)">违规下架商品</a></span> <span class="tab-two"></span>
+				href="javascript:void(0)">违规下架商品</a> | <a
+                href="/admin/goods/aboutExcel">批量新增商品</a></span> <span class="tab-two"></span>
 		</div>
 		<form name="queryForm" id="queryForm"
 			action="/admin/goods/toshowgoodslist" method="post">

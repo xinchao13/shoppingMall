@@ -4,10 +4,15 @@ import com.shopping.mall.themall.model.*;
 import com.shopping.mall.themall.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.shopping.mall.themall.util.ExcelUtil;
+import com.shopping.mall.themall.util.ReadExcel;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +23,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,6 +47,8 @@ public class GoodsController {
 	IImgService imgService;
 	@Resource
 	IGoodsAndSpecvService goodsAndSpecvService;
+	@Autowired
+	ReadExcel readExcel;
 	/**
 	 * 去商品列表页
 	 * @return
@@ -81,6 +91,93 @@ public class GoodsController {
 		List<Spec> listSpec = specService.selectAll();
 		model.addAttribute("listSpec", listSpec);
 		return "admin/insertGoods";
+	}
+
+	/**
+	 * 去批量新增页
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/aboutExcel")
+	public String toInsertGoodsMore(Model model) {
+
+		return "admin/aboutexcel";
+	}
+
+	/**
+	 * 批量上传商品方法
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/excelUpload",method= RequestMethod.POST)
+	public String excelUpload(HttpServletRequest req) throws Exception{
+		//上传Excel文档=======================================begin
+		MultipartHttpServletRequest mreq = (MultipartHttpServletRequest)req;
+		MultipartFile file = mreq.getFile("file");
+		String fileName = file.getOriginalFilename();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String path = "H:/uploadFiles/"+sdf.format(new Date())+fileName.substring(fileName.lastIndexOf('.'));
+		FileOutputStream fos = new FileOutputStream(path);
+		fos.write(file.getBytes());
+		fos.flush();
+		fos.close();
+		//上传Excel文档=======================================end
+
+		//解析Excel ==================================begin
+		Brand brand = new Brand();
+		brand.setId(1);
+		brand.setBrandName("水果");
+		Brand brand2 = new Brand();
+		brand2.setId(2);
+		brand2.setBrandName("蔬菜");
+		List<Brand> list_brand = new ArrayList<Brand>();
+		list_brand.add(brand);
+		list_brand.add(brand2);
+
+		List<Goods> list = readExcel.readExcel(path, list_brand, null);
+		for(Goods goods : list) {
+			System.out.println("id="+goods.getId()+", goodsname="+goods.getGoodname()+", price="+goods.getOldprice()+", brandId="+goods.getBrandid());
+		}
+		//解析Excel ==================================end
+		return "index";
+	}
+	/**
+	 * 下载excel商品表
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/downloadfile")
+	public void downloadfile(HttpServletResponse resp) throws IOException{
+		//根据条件查询想要下载的数据集合
+//		List<Student> list_stdent = studentService.findAll();
+//		ExcelUtil el = new ExcelUtil();
+		List<Goods> list = new ArrayList<Goods>();
+		Goods goods = new Goods();
+		goods.setBrandid(1);
+		goods.setGoodname("iphone7");
+		goods.setId(1);
+		goods.setOldprice(new BigDecimal(1200));
+
+		Goods goods2 = new Goods();
+		goods2.setBrandid(2);
+		goods2.setGoodname("vivo X23");
+		goods2.setId(2);
+		goods2.setOldprice(new BigDecimal(1500));
+		list.add(goods);
+		list.add(goods2);
+		XSSFWorkbook wb = ExcelUtil.exportExcelForGoods(list);
+
+		String filename = "Excelabc.xlsx";
+//		filename = Util.encodeFilename(filename, resp);
+		resp.setContentType("application/vnd.ms-xlsx");
+		resp.setCharacterEncoding("UTF-8");
+		resp.setHeader("Content-disposition", "attachment;filename=" + filename);
+		OutputStream ouputStream = resp.getOutputStream();
+		wb.write(ouputStream);
+		ouputStream.flush();
+		ouputStream.close();
 	}
 	/**
 	 * 规格与规格值联动
